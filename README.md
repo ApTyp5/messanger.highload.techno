@@ -32,3 +32,7 @@
   = 56,25 * 10^8 (rpm) =
   = 93,75 * 10^6 (rps)
 ```
+
+Схема бд (для MVP):
+--------------------
+![Схема бд](https://github.com/ApTyp5/messanger.highload.techno/blob/main/photo_2020-10-18_21-06-09.jpg)
