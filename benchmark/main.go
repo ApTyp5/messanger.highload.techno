@@ -21,7 +21,7 @@ func main() {
 	client := connectNverify()
 	showNsetSettings()
 
-	insert12gb(client)
+	//insert12gb(client)
 	insertBench(client)
 
 	disconnect(client)
@@ -59,7 +59,7 @@ func connectNverify() *mongo.Client {
 
 func insertBench(client *mongo.Client) {
 	start := 0
-	stop := 100000
+	stop := 939600000
 	count := stop - start
 	collectionName := "insert"
 	collection := client.Database(dbn).Collection(collectionName)
@@ -72,7 +72,7 @@ func insertBench(client *mongo.Client) {
 	}
 
 	t := time.Now()
-	collection.Indexes().CreateOne(ctx, mongo.IndexModel{
+	_, _ = collection.Indexes().CreateOne(ctx, mongo.IndexModel{
 		Keys: bsonx.Doc{
 			{Key: "chat_id", Value: bsonx.Int32(1)},
 			{Key: "created_at", Value: bsonx.Int32(1)},
@@ -114,7 +114,7 @@ func insert12gb(client *mongo.Client) {
 	}
 
 	t := time.Now()
-	collection.Indexes().CreateOne(ctx, mongo.IndexModel{
+	_, _ = collection.Indexes().CreateOne(ctx, mongo.IndexModel{
 		Keys: bsonx.Doc{
 			{Key: "chat_id", Value: bsonx.Int32(1)},
 			{Key: "created_at", Value: bsonx.Int32(1)},
@@ -129,12 +129,46 @@ func insert12gb(client *mongo.Client) {
 		fmt.Printf("step %d started\n", i)
 		message.ChatId = i
 		arr := make([]interface{}, 0, 1)
-		for j := 0; j < 4000; j++ {
+		for j := 0; j < 1000; j++ {
 			arr = append(arr, message)
 		}
 
 		tStart := time.Now()
 		_, err := collection.InsertMany(ctx, arr)
+		tStop := time.Now()
+		tSum += tStop.Sub(tStart).Nanoseconds() / 1000
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("step %d ended\n", i)
+	}
+
+	fmt.Printf("average time = %dmcs\n", tSum/int64(count))
+}
+
+func read(client *mongo.Client) {
+	start := 0
+	stop := 100000
+	count := stop - start
+	collectionName := "insert"
+	collection := client.Database(dbn).Collection(collectionName)
+
+	message := Message{
+		Author:    "Name",
+		ChatId:    -1,
+		CreatedAt: time.Now(),
+		Text:      "dog's hotdogs are hot as dogs",
+	}
+
+	var tSum int64 = 0
+
+	for i := start; i < stop; i++ {
+		fmt.Printf("step %d started\n", i)
+		message.ChatId = i
+
+		tStart := time.Now()
+		_, err := collection.Find(ctx, )
 		tStop := time.Now()
 		tSum += tStop.Sub(tStart).Nanoseconds() / 1000
 
