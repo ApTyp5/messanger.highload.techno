@@ -42,7 +42,7 @@
 
 Схема бд:
 --------------------
-![Схема бд](https://github.com/ApTyp5/messanger.highload.techno/blob/main/scheme.jpg)
+![Схема бд](https://github.com/ApTyp5/messanger.highload.techno/blob/main/schem.jpg)
 
 
 
