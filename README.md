@@ -69,7 +69,7 @@
 Взаимодействие всех частей в целом:
 --------------------------------
 эта картинка должна быть в конце как итог, но приведена сейчас, чтобы было легче понимать, о чем говорится дальше
-![Схема бд](https://github.com/ApTyp5/messanger.highload.techno/blob/main/all.jpg)
+![Схема бд](https://github.com/ApTyp5/messanger.highload.techno/blob/main/alll.jpg)
 
 
 Шардинг
