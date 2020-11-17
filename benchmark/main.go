@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/x/bsonx"
@@ -21,8 +22,9 @@ func main() {
 	client := connectNverify()
 	showNsetSettings()
 
-	//insert12gb(client)
-	insertBench(client)
+	findDocsReadAll(client)
+	//insert10milMessages(client)
+	//insertBench(client)
 
 	disconnect(client)
 }
@@ -99,9 +101,57 @@ func insertBench(client *mongo.Client) {
 	fmt.Printf("average time = %dmcs\n", tSum/int64(count))
 }
 
-func insert12gb(client *mongo.Client) {
+func findDocs(client *mongo.Client) {
+	collectionName := "insert"
+	collection := client.Database(dbn).Collection(collectionName)
+	t, _ := time.Parse(time.RFC3339, "2020-11-17T11:09:01.920Z")
+	filter := bson.M{"created_at": bson.M{"$lt": t}, "chat_id": bson.M{"$lt": 30}}
+	message := Message{}
+
+	curs, err := collection.Find(ctx, filter)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for curs.Next(ctx) == true {
+		err := curs.Decode(&message)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Printf("author: %s, chat_id: %d, created_at: %s, text: %s\n", message.Author, message.ChatId, message.CreatedAt.String(), message.Text)
+	}
+}
+
+func findDocsReadAll(client *mongo.Client) {
+	collectionName := "insert"
+	collection := client.Database(dbn).Collection(collectionName)
+	//t, _ := time.Parse(time.RFC3339, "2020-11-17T11:09:01.920Z")
+	//filter := bson.M{"created_at": bson.M{"$lt": t}, "chat_id": bson.M{"$lt": 30}}
+	messages := make([]Message, 0, 100)
+
+	for i := 0; i < 10000000; i += 30 {
+		filter := bson.M{"chat_id": bson.M{"$gt": i, "$lt": i + 30}}
+
+		curs, err := collection.Find(ctx, filter)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = curs.All(ctx, &messages)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if (i % 1000) == 0 {
+			fmt.Printf("step %d\n", i)
+		}
+	}
+}
+
+func insert10milMessages(client *mongo.Client) {
 	start := 0
-	stop := 100000
+	stop := 10000000
 	count := stop - start
 	collectionName := "insert"
 	collection := client.Database(dbn).Collection(collectionName)
@@ -128,47 +178,10 @@ func insert12gb(client *mongo.Client) {
 	for i := start; i < stop; i++ {
 		fmt.Printf("step %d started\n", i)
 		message.ChatId = i
-		arr := make([]interface{}, 0, 1)
-		for j := 0; j < 1000; j++ {
-			arr = append(arr, message)
-		}
+		message.CreatedAt = time.Now()
 
 		tStart := time.Now()
-		_, err := collection.InsertMany(ctx, arr)
-		tStop := time.Now()
-		tSum += tStop.Sub(tStart).Nanoseconds() / 1000
-
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Printf("step %d ended\n", i)
-	}
-
-	fmt.Printf("average time = %dmcs\n", tSum/int64(count))
-}
-
-func read(client *mongo.Client) {
-	start := 0
-	stop := 100000
-	count := stop - start
-	collectionName := "insert"
-	collection := client.Database(dbn).Collection(collectionName)
-
-	message := Message{
-		Author:    "Name",
-		ChatId:    -1,
-		CreatedAt: time.Now(),
-		Text:      "dog's hotdogs are hot as dogs",
-	}
-
-	var tSum int64 = 0
-
-	for i := start; i < stop; i++ {
-		fmt.Printf("step %d started\n", i)
-		message.ChatId = i
-
-		tStart := time.Now()
-		_, err := collection.Find(ctx, )
+		_, err := collection.InsertOne(ctx, message)
 		tStop := time.Now()
 		tSum += tStop.Sub(tStart).Nanoseconds() / 1000
 
