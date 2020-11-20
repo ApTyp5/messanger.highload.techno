@@ -72,7 +72,7 @@
 
 Замеры времени вставки одного сообщения
 ------------------------------
-![Замеры вставки одного сообщения](https://github.com/ApTyp5/messanger.highload.techno/blob/main/insert-bench.jpg)
+![Замеры вставки одного сообщения](https://github.com/ApTyp5/messanger.highload.techno/blob/main/insert-bench.png)
 
 Длина сообщения была равна 35 русских символов c пробелами, что соответствует 
 [средней длине сообщения человека в возрасте 25 лет](https://crushhapp.com/blog/k-wrap-it-up-mom).
@@ -82,7 +82,7 @@
 
 Замеры времени получения одной очереди сообщений
 ------------------------------------ 
-![Замеры вставки одного сообщения](https://github.com/ApTyp5/messanger.highload.techno/blob/main/read-bench.jpg)
+![Замеры вставки одного сообщения](https://github.com/ApTyp5/messanger.highload.techno/blob/main/read-bench.png)
 
 В очереди сообщений при замерах находится 20 писем.
 
