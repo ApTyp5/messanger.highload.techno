@@ -1,4 +1,4 @@
-# Курсовой проект "NotWatsApp" #
+# Курсовой проект "NotWhatsApp" #
 
 ![logo](https://github.com/ApTyp5/messanger.highload.techno/blob/main/notwatsup.jpg)
 
