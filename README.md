@@ -1,5 +1,7 @@
 # Курсовой проект "NotWatsApp" #
 
+![logo](https://github.com/ApTyp5/messanger.highload.techno/blob/main/notwatsup.jpg)
+
 ***
 
 ## Планируемая нагрузка
