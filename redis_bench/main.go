@@ -13,8 +13,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	for i := 0; i < 20; i++ {
-		_, err = c.Do("rpush", 1, 2, 12312312, "лорем ипсум долорес сит амиет аурум")
+	for i := 0; i < 800; i++ {
+		_, err = c.Do("lpop", 1)
 		if err != nil {
 			log.Fatal(err)
 		}
